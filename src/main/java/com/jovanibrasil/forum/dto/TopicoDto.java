@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.jovanibrasil.forum.model.Topico;
+import com.jovanibrasil.forum.models.Topico;
 
 public class TopicoDto {
 

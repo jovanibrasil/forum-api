@@ -1,4 +1,4 @@
-package com.jovanibrasil.forum.model;
+package com.jovanibrasil.forum.models;
 
 public enum StatusTopico {
 	

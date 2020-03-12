@@ -18,8 +18,13 @@ public class TopicoController {
 	}
 	
 	@GetMapping("/topicos")
-	public List<TopicoDto> lista() {
-		return TopicoDto.converter(topicoRepository.findAll());
+	public List<TopicoDto> lista(String nomeCurso) {
+		if(nomeCurso == null) {
+			return TopicoDto.converter(topicoRepository.findAll());	
+		}else {
+			return TopicoDto.converter(topicoRepository.findByCurso_Nome(nomeCurso));
+			//return TopicoDto.converter(topicoRepository.carregarPorNomeDoCurso(nomeCurso));
+		}
 	}
 	
 }

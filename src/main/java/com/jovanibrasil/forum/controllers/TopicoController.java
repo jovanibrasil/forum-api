@@ -7,6 +7,8 @@ import java.util.Optional;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,14 +40,13 @@ public class TopicoController {
 		this.cursoRepository = cursoRepository;
 	}
 	
+	@Cacheable(value = "listaDeTopicos", key = "nomeCurso")
 	@GetMapping
 	public List<TopicoDto> lista(String nomeCurso) {
 		if(nomeCurso == null) {
 			return TopicoDto.converter(topicoRepository.findAll());	
 		}else {
 			return TopicoDto.converter(topicoRepository.findByCurso_Nome(nomeCurso));
-			// second option
-			//return TopicoDto.converter(topicoRepository.carregarPorNomeDoCurso(nomeCurso));
 		}
 	}
 	
@@ -58,6 +59,7 @@ public class TopicoController {
 		return ResponseEntity.ok(new DetalhesTopicoDto(topico.get()));
 	}
 	
+	@CacheEvict(value = "listaDeTopicos", allEntries = true)
 	@PostMapping
 	public ResponseEntity<TopicoDto> cadastrar(@Valid @RequestBody TopicoForm topicoForm,
 			UriComponentsBuilder uriBuilder) {
@@ -68,6 +70,7 @@ public class TopicoController {
 		return ResponseEntity.created(uri).body(new TopicoDto(topico));
 	}
 	
+	@CacheEvict(value = "listaDeTopicos", allEntries = true)
 	@PutMapping("/{id}")
 	public ResponseEntity<TopicoDto> atualizar(@PathVariable Long id, 
 			@Valid @RequestBody AtualizacaoTopicoForm atualizacaoTopicoForm){
@@ -80,6 +83,7 @@ public class TopicoController {
 		return ResponseEntity.ok(new TopicoDto(topico));
 	}
 
+	@CacheEvict(value = "listaDeTopicos", allEntries = true)
 	@Transactional
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> remover(@PathVariable Long id){

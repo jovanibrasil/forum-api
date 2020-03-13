@@ -3,11 +3,15 @@ package com.jovanibrasil.forum.controllers;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.websocket.server.PathParam;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,7 +33,7 @@ public class TopicoController {
 		this.cursoRepository = cursoRepository;
 	}
 	
-	@GetMapping("/topicos")
+	@GetMapping
 	public List<TopicoDto> lista(String nomeCurso) {
 		if(nomeCurso == null) {
 			return TopicoDto.converter(topicoRepository.findAll());	
@@ -41,10 +45,10 @@ public class TopicoController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<TopicoDto> cadastrar(@RequestBody TopicoForm topicoForm,
+	public ResponseEntity<TopicoDto> cadastrar(@Valid @RequestBody TopicoForm topicoForm,
 			UriComponentsBuilder uriBuilder) {
 		Topico topico = topicoRepository.save(topicoForm.converter(cursoRepository));
-		URI uri = uriBuilder.path("/topicos/{id}")
+		URI uri = uriBuilder.path("/topicos/{id}") // only the resource path
 				.buildAndExpand(topico.getId())
 				.toUri();
 		return ResponseEntity.created(uri).body(new TopicoDto(topico));

@@ -40,7 +40,7 @@ public class TopicoController {
 		this.cursoRepository = cursoRepository;
 	}
 	
-	@Cacheable(value = "listaDeTopicos", key = "nomeCurso")
+	@Cacheable(value = "listaDeTopicos")
 	@GetMapping
 	public List<TopicoDto> lista(String nomeCurso) {
 		if(nomeCurso == null) {
